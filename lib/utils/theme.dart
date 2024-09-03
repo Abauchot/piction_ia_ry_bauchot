@@ -29,7 +29,7 @@ class AppTheme {
         ),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(Colors.deepPurple),
+        fillColor: WidgetStateProperty.all(Colors.deepPurple),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
