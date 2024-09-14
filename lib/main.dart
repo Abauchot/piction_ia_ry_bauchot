@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:piction_ia_ry_bauchot/screens/login.dart';
+import 'package:piction_ia_ry_bauchot/screens/startgame.dart';
 import 'package:piction_ia_ry_bauchot/utils/theme.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Piction-ai-ry',
       theme: AppTheme.lightTheme,
-      home: LoginPage(),
+      home: StartGame(),
     );
   }
 }
