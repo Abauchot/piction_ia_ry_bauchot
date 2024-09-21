@@ -35,106 +35,125 @@ class _ChallengeCreationState extends State<ChallengeCreation> {
         String forbidden1 = '';
         String forbidden2 = '';
         String forbidden3 = '';
+        String errorMessage = '';
 
-        return AlertDialog(
-          title: const Text('Ajout d\'un challenge'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Premier mot'),
-                  onChanged: (value) {
-                    firstWord = value;
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Ajout d\'un challenge'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          description = 'SUR';
-                        });
+                    TextField(
+                      decoration: const InputDecoration(labelText: 'Premier mot'),
+                      onChanged: (value) {
+                        firstWord = value;
                       },
-                      child: const Text('SUR'),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          description = 'DANS';
-                        });
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              description = 'SUR';
+                            });
+                          },
+                          child: const Text('SUR'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              description = 'DANS';
+                            });
+                          },
+                          child: const Text('DANS'),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              description += ' UN';
+                            });
+                          },
+                          child: const Text('UN'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              description += ' UNE';
+                            });
+                          },
+                          child: const Text('UNE'),
+                        ),
+                      ],
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(labelText: 'Deuxième mot'),
+                      onChanged: (value) {
+                        secondWord = value;
                       },
-                      child: const Text('DANS'),
                     ),
+                    TextField(
+                      decoration: const InputDecoration(labelText: 'Mot interdit 1'),
+                      onChanged: (value) {
+                        forbidden1 = value;
+                      },
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(labelText: 'Mot interdit 2'),
+                      onChanged: (value) {
+                        forbidden2 = value;
+                      },
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(labelText: 'Mot interdit 3'),
+                      onChanged: (value) {
+                        forbidden3 = value;
+                      },
+                    ),
+                    if (errorMessage.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          errorMessage,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          description += ' UN';
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    if (firstWord.isEmpty || secondWord.isEmpty || description.isEmpty) {
+                      setState(() {
+                        errorMessage = 'Veuillez remplir tous les champs requis.';
+                      });
+                    } else {
+                      setState(() {
+                        int challengeNumber = _challenges.length + 1;
+                        _challenges.add({
+                          'title': 'Challenge#$challengeNumber',
+                          'description': '$firstWord $description $secondWord',
+                          'forbidden1': forbidden1,
+                          'forbidden2': forbidden2,
+                          'forbidden3': forbidden3,
                         });
-                      },
-                      child: const Text('UN'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          description += ' UNE';
-                        });
-                      },
-                      child: const Text('UNE'),
-                    ),
-                  ],
-                ),
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Deuxième mot'),
-                  onChanged: (value) {
-                    secondWord = value;
+                      });
+                      Navigator.of(context).pop();
+                    }
                   },
-                ),
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Mot interdit 1'),
-                  onChanged: (value) {
-                    forbidden1 = value;
-                  },
-                ),
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Mot interdit 2'),
-                  onChanged: (value) {
-                    forbidden2 = value;
-                  },
-                ),
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Mot interdit 3'),
-                  onChanged: (value) {
-                    forbidden3 = value;
-                  },
+                  child: const Text('Ajouter'),
                 ),
               ],
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  int challengeNumber = _challenges.length + 1;
-                  _challenges.add({
-                    'title': 'Challenge#$challengeNumber',
-                    'description': '$firstWord $description $secondWord',
-                    'forbidden1': forbidden1,
-                    'forbidden2': forbidden2,
-                    'forbidden3': forbidden3,
-                  });
-                });
-                Navigator.of(context).pop();
-              },
-              child: const Text('Ajouter'),
-            ),
-          ],
+            );
+          },
         );
       },
     );

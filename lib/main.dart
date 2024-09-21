@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 //import 'package:piction_ia_ry_bauchot/screens/startgame.dart';
 //import 'package:piction_ia_ry_bauchot/screens/team_building.dart';
-import 'package:piction_ia_ry_bauchot/screens/challange_creation.dart';
+//import 'package:piction_ia_ry_bauchot/screens/challange_creation.dart';
+import 'package:piction_ia_ry_bauchot/screens/prompt_challenge.dart';
 import 'package:piction_ia_ry_bauchot/utils/theme.dart';
 
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Piction-ai-ry',
       theme: AppTheme.lightTheme,
-      home: ChallengeCreation(),
+      home: PromptChallenge(),
     );
   }
 }
