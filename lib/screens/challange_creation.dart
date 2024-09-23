@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piction_ia_ry_bauchot/forms/ChallengeForm.dart';
 import 'package:piction_ia_ry_bauchot/utils/theme.dart';
 
 void main() {
@@ -26,127 +27,37 @@ class ChallengeCreation extends StatefulWidget {
 class _ChallengeCreationState extends State<ChallengeCreation> {
   final List<Map<String, String>> _challenges = [];
   void _addChallenge() {
+    final form = ChallengeForm(firstWord: "", secondWord: "", description: "", forbidden1: "", forbidden2: "", forbidden3: "", errorMessage: "");
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        String firstWord = '';
-        String secondWord = '';
-        String description = '';
-        String forbidden1 = '';
-        String forbidden2 = '';
-        String forbidden3 = '';
-        String errorMessage = '';
-
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
               title: const Text('Ajout d\'un challenge'),
               content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      decoration: const InputDecoration(labelText: 'Premier mot'),
-                      onChanged: (value) {
-                        firstWord = value;
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              description = 'SUR';
-                            });
-                          },
-                          child: const Text('SUR'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              description = 'DANS';
-                            });
-                          },
-                          child: const Text('DANS'),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              description += ' UN';
-                            });
-                          },
-                          child: const Text('UN'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              description += ' UNE';
-                            });
-                          },
-                          child: const Text('UNE'),
-                        ),
-                      ],
-                    ),
-                    TextField(
-                      decoration: const InputDecoration(labelText: 'Deuxième mot'),
-                      onChanged: (value) {
-                        secondWord = value;
-                      },
-                    ),
-                    TextField(
-                      decoration: const InputDecoration(labelText: 'Mot interdit 1'),
-                      onChanged: (value) {
-                        forbidden1 = value;
-                      },
-                    ),
-                    TextField(
-                      decoration: const InputDecoration(labelText: 'Mot interdit 2'),
-                      onChanged: (value) {
-                        forbidden2 = value;
-                      },
-                    ),
-                    TextField(
-                      decoration: const InputDecoration(labelText: 'Mot interdit 3'),
-                      onChanged: (value) {
-                        forbidden3 = value;
-                      },
-                    ),
-                    if (errorMessage.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          errorMessage,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ),
-                  ],
-                ),
+                child: form,
               ),
               actions: [
                 ElevatedButton(
                   onPressed: () {
-                    if (firstWord.isEmpty || secondWord.isEmpty || description.isEmpty) {
+                    if (form.firstWord.isEmpty || form.secondWord.isEmpty || form.description.isEmpty) {
                       setState(() {
-                        errorMessage = 'Veuillez remplir tous les champs requis.';
+                        form.errorMessage = 'Veuillez remplir tous les champs requis.';
                       });
                     } else {
                       setState(() {
                         int challengeNumber = _challenges.length + 1;
                         _challenges.add({
                           'title': 'Challenge#$challengeNumber',
-                          'description': '$firstWord $description $secondWord',
-                          'forbidden1': forbidden1,
-                          'forbidden2': forbidden2,
-                          'forbidden3': forbidden3,
+                          'description': '${form.firstWord} ${form.description} ${form.secondWord}',
+                          'forbidden1': form.forbidden1,
+                          'forbidden2': form.forbidden2,
+                          'forbidden3': form.forbidden3,
                         });
                       });
                       Navigator.of(context).pop();
+                      setState(() {}); // Ensure the state is updated
                     }
                   },
                   child: const Text('Ajouter'),
@@ -156,7 +67,9 @@ class _ChallengeCreationState extends State<ChallengeCreation> {
           },
         );
       },
-    );
+    ).then((_) {
+      setState(() {}); // Ensure the state is updated after the dialog is closed
+    });
   }
 
   void _removeChallenge(int index) {
