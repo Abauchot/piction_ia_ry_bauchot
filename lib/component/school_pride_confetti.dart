@@ -78,6 +78,6 @@ class _SchoolPrideConfettiState extends State<SchoolPrideConfetti> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(); // This widget does not need to build anything
+    return Container();
   }
 }

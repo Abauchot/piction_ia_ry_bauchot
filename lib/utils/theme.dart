@@ -20,5 +20,8 @@ class AppTheme {
         ),
       ),
     ),
+    textTheme: const TextTheme(
+
+    )
   );
 }

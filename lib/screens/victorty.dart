@@ -57,6 +57,7 @@ class _VictoryState extends State<Victory> {
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 10),
