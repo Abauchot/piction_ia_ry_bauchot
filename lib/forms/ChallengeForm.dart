@@ -10,7 +10,11 @@ class ChallengeForm extends StatefulWidget {
   String forbidden3 = '';
   String errorMessage = '';
 
-  ChallengeForm({super.key, required this.firstWord, required this.secondWord, required this.description, required this.forbidden1, required this.forbidden2, required this.forbidden3, required this.errorMessage});
+  ChallengeForm({super.key, required this.firstWord, required this.secondWord,
+    required this.description, required this.forbidden1,
+    required this.forbidden2, required this.forbidden3,
+    required this.errorMessage
+  });
 
   @override
   State<ChallengeForm> createState() => _ChallengeFormState();

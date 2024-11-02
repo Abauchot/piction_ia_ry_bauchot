@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:piction_ia_ry_bauchot/screens/startgame.dart';
 
 class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
+
   @override
   _LoginFormState createState() => _LoginFormState();
 }
@@ -20,22 +24,27 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
+  final storage = const FlutterSecureStorage();
+
   Future<void> _login() async {
     final String name = _nameController.text;
     final String password = _passwordController.text;
 
     if (name.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Veuillez remplir tous les champs requis.'),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Veuillez remplir tous les champs requis.'),
+          ),
+        );
+      }
       return;
     }
 
     final String url = '${dotenv.env['API_URL']}/login';
 
     try {
+      print('Sending POST request to $url with body: {name: $name, password: $password}');
       final response = await http.post(
         Uri.parse(url),
         headers: <String, String>{
@@ -47,26 +56,46 @@ class _LoginFormState extends State<LoginForm> {
         }),
       );
 
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (!mounted) return;
+
       if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        final token = responseData['token'];
+
+        // Store the token securely
+        await storage.write(key: 'auth_token', value: token);
+
+        print('Login successful. Token: $token');
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Connexion réussie!'),
           ),
         );
-        // Handle successful login (e.g., navigate to another screen)
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StartGame()),
+        );
       } else {
+        print('Login failed with status: ${response.statusCode}');
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Erreur lors de la connexion.'),
+          SnackBar(
+            content: Text('Erreur lors de la connexion: ${response.statusCode}'),
           ),
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Erreur réseau. Veuillez réessayer.'),
-        ),
-      );
+      print('Exception: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Erreur réseau. Veuillez réessayer.'),
+          ),
+        );
+      }
     }
   }
 

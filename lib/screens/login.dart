@@ -24,7 +24,7 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PiCtion-ai-ry'),
+        title: const Text('Piction-ai-ry'),
       ),
       body: Center(
         child: Column(

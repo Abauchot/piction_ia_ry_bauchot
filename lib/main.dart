@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:piction_ia_ry_bauchot/screens/login.dart';
+import 'package:piction_ia_ry_bauchot/screens/home.dart';
+//import 'package:piction_ia_ry_bauchot/screens/login.dart';
 //import 'package:piction_ia_ry_bauchot/screens/signup.dart';
 //import 'package:piction_ia_ry_bauchot/screens/startgame.dart';
 //import 'package:piction_ia_ry_bauchot/screens/team_building.dart';
-//import 'package:piction_ia_ry_bauchot/screens/challange_creation.dart';
+//import 'package:piction_ia_ry_bauchot/screens/challenge_creation.dart';
 //import 'package:piction_ia_ry_bauchot/screens/prompt_challenge.dart';
 //import 'package:piction_ia_ry_bauchot/screens/proposition_team.dart';
 //import 'package:piction_ia_ry_bauchot/screens/victorty.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Piction-ai-ry',
       theme: AppTheme.lightTheme,
-      home: Login(),
+      home: Home(),
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:piction_ia_ry_bauchot/utils/theme.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,11 +22,60 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class StartGame  extends StatefulWidget {
+class StartGame extends StatefulWidget {
   @override
-  _StartGameState  createState() => _StartGameState();
+  _StartGameState createState() => _StartGameState();
 }
+
+const storage = FlutterSecureStorage();
+
 class _StartGameState extends State<StartGame> {
+  Future<void> _createGame() async {
+    final String apiUrl = '${dotenv.env['API_URL']}/game_sessions';
+
+
+    try {
+      final token = await storage.read(key: 'auth_token');
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization' : 'Bearer $token',
+        },
+        body: jsonEncode(<String, String>{
+          // Add necessary data to create a game session
+        }),
+      );
+
+      if (!mounted) return;
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Game session created successfully!'),
+          ),
+        );
+        // Navigate to another page or perform other actions
+      } else {
+        print('Error: ${response.statusCode} - ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error creating game session: ${response.statusCode}'),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      print('Exception: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Network error. Please try again.'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,12 +110,9 @@ class _StartGameState extends State<StartGame> {
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
-                onPressed: () {
-                  // Add your onPressed code here!
-                },
+                onPressed: _createGame,
                 icon: const Icon(Icons.group),
                 label: const Text('Create a new game'),
-
               ),
               const SizedBox(height: 10),
               ElevatedButton.icon(
