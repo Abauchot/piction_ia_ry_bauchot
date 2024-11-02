@@ -40,6 +40,9 @@ dependencies:
   flutter_dotenv: ^5.1.0
   libphonenumber_plugin: ^0.3.3
   flutter_secure_storage: ^9.2.2
+  pretty_qr_code: ^3.3.0
+  qr_code_scanner: ^1.0.1
+  permission_handler: ^11.3.1
 
 
 dev_dependencies:
