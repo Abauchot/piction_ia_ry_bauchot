@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:piction_ia_ry_bauchot/screens/login.dart';
 
 
 
@@ -56,20 +57,16 @@ class _SignUpFormState extends State<SignUpForm> {
           content: Text('Inscription réussie!'),
         ),
       );
-      if (kDebugMode) {
-        print('Status Code: ${response.statusCode}');
-        print('Response Body: ${response.body}');
-      }
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Login())
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Erreur lors de l\'inscription.'),
         ),
       );
-      if (kDebugMode) {
-        print('Status Code: ${response.statusCode}');
-        print('Response Body: ${response.body}');
-      }
     }
   }
 

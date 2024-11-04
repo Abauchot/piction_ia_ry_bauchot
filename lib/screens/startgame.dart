@@ -3,8 +3,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:piction_ia_ry_bauchot/utils/theme.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
+//import screens
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:piction_ia_ry_bauchot/component/qr_code_popup.dart';
+import 'package:piction_ia_ry_bauchot/screens/team_building.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,19 +46,46 @@ class _StartGameState extends State<StartGame> {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(<String, String>{
-          // Ajoutez les données nécessaires pour créer une session de jeu
         }),
       );
 
       if (!mounted) return;
 
       if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        print('Game session created: $responseData');
+        final gameId = responseData['id'].toString();
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Game session created successfully!'),
           ),
         );
-        // Naviguer vers une autre page ou effectuer d'autres actions
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Game QR Code'),
+              content: PrettyQrView.data(
+                data: '${dotenv.env['API_URL']}/game_sessions/$gameId',
+                errorCorrectLevel: QrErrorCorrectLevel.M,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TeamBuilding(gameId: gameId)),
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
       } else {
         print('Error: ${response.statusCode} - ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -88,9 +118,22 @@ class _StartGameState extends State<StartGame> {
       },
     ).then((scannedData) {
       if (scannedData != null) {
-        // Traitez les données scannées ici
-        print('Scanned QR Code: $scannedData');
-        // Par exemple, naviguez vers une autre page avec ces données
+        // Extract gameId from the scanned URL
+        final Uri uri = Uri.parse(scannedData);
+        final String? gameId = uri.pathSegments.isNotEmpty ? uri.pathSegments.last : null;
+
+        if (gameId != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TeamBuilding(gameId: gameId)),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Invalid QR code scanned.'),
+            ),
+          );
+        }
       }
     });
   }

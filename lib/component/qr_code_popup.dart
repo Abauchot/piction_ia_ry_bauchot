@@ -26,9 +26,9 @@ class _QrCodeScannerPopupState extends State<QrCodeScannerPopup> {
       status = await Permission.camera.request();
     }
     if (status.isGranted) {
-      setState(() {}); // Redraw to initialize QRView if permission is granted
+      setState(() {});
     } else {
-      Navigator.of(context).pop(); // Ferme le scanner si la permission n'est pas accordée
+      Navigator.of(context).pop();
     }
   }
 
@@ -50,7 +50,7 @@ class _QrCodeScannerPopupState extends State<QrCodeScannerPopup> {
   void _onQRViewCreated(QRViewController qrController) {
     controller = qrController;
     qrController.scannedDataStream.listen((scanData) {
-     // Navigator.of(context).pop(scanData.code); // Retourne les données scannées
+      Navigator.of(context).pop(scanData.code); // Return the scanned data
     });
   }
 

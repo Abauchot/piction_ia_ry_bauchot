@@ -1,24 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:piction_ia_ry_bauchot/utils/theme.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Piction-ai-ry',
-      home: TeamBuilding(),
-      theme: AppTheme.lightTheme,
-    );
-  }
-}
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class TeamBuilding extends StatefulWidget {
+  final String gameId;
+
+  TeamBuilding({required this.gameId});
+
   @override
   _TeamBuildingState createState() => _TeamBuildingState();
 }
@@ -45,6 +33,12 @@ class _TeamBuildingState extends State<TeamBuilding> {
                   color: Colors.white,
                 ),
               ),
+              const SizedBox(height: 10),
+          PrettyQrView.data(
+                data: '${dotenv.env['API_URL']}/game_sessions/${widget.gameId}',
+                errorCorrectLevel: QrErrorCorrectLevel.M,
+              ),
+              const SizedBox(height: 20),
               Container(
                 width: double.infinity,
                 height: 150,
