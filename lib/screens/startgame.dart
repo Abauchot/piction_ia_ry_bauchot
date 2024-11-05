@@ -121,8 +121,11 @@ class _StartGameState extends State<StartGame> {
         // Extract gameId from the scanned URL
         final Uri uri = Uri.parse(scannedData);
         final String? gameId = uri.pathSegments.isNotEmpty ? uri.pathSegments.last : null;
+        print('Scanned gameId: $gameId');
+        print('Scanned URL: $scannedData');
 
         if (gameId != null) {
+          Navigator.of(context).pop(); // Close the bottom sheet
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => TeamBuilding(gameId: gameId)),

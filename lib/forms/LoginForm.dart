@@ -67,6 +67,7 @@ class _LoginFormState extends State<LoginForm> {
 
         // Store the token securely
         await storage.write(key: 'auth_token', value: token);
+        await storage.write(key: 'player_name', value: name);
 
         print('Login successful. Token: $token');
 
